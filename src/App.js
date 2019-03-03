@@ -11,6 +11,7 @@ class App extends Component {
       scissors: false,
       localCounter: 0,
       userCounter: 0,
+      res: '',
       localSelection: ''
     };
     this.play = this.play.bind(this);
@@ -19,7 +20,6 @@ class App extends Component {
   computerOption() {
     var options = ['r', 'p', 's'];
     var LocalOption = Math.floor(Math.random() * 3);
-    console.log(LocalOption);
     switch (LocalOption) {
       case 0:
         this.setState(state => ({
@@ -40,6 +40,15 @@ class App extends Component {
         console.log('no selection');
     }
     return options[LocalOption];
+  }
+
+  winReset(result) {
+    this.setState(state => ({
+      userCounter: 0,
+      localCounter: 0,
+      res: result ? 'WIN' : 'LOOSE'
+    }));
+    console.log(result);
   }
 
   play(option) {
@@ -70,13 +79,26 @@ class App extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.state.userCounter === 3) {
+      this.winReset(true);
+    } else if (this.state.localCounter === 3) {
+      this.winReset(false);
+    }
+  }
+
+
+
   render() {
     return (
       <div className="container">
         <div className="ResultContainer">
-          <div className="UserScore">{this.state.userCounter}</div>
-          <div className="LocalOutput">{this.state.localSelection}</div>
-          <div className="LocalScore">{this.state.localCounter}</div>
+          <div className="num">
+            <div className="UserScore">{this.state.userCounter}</div>
+            <div className="LocalOutput">{this.state.localSelection}</div>
+            <div className="LocalScore">{this.state.localCounter}</div>
+          </div>
+          <div className="WL">{this.state.res}</div>
         </div>
         <div className="RPSContainer">
           <div className="rock" onClick={() => { this.play('r') }}>ROCK</div>
